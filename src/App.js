@@ -1,24 +1,43 @@
-import logo from './logo.svg';
 import './App.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { loadTodos } from './actions'; 
+
 
 function App() {
+
+  const todos = useSelector(state => state.todos)
+
+  const loading = useSelector(state => state.loading)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(loadTodos())
+  }, [])
+
+  const handleDelete = (index) =>{
+    dispatch({
+        type:'delete',
+        payload:index
+    })
+}
+
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+   <div>
+      {loading ? 'LOADING.....' : 
+        (todos.map((item, index)  => {
+            return(
+              <div className='post'>
+                <h1>Post</h1>
+                <h2>{item.title}</h2>
+                <button onClick={() => handleDelete(index)}>X</button>
+              </div>
+            )
+        }))}  
+   </div>
   );
 }
 
